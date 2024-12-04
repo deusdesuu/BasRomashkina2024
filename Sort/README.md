@@ -1,1 +1,4 @@
-Different sorting methods with examples of best / worst / avg case, amounts of comparisons and element swaps
+#Sort.cpp
+Сортировки в чистом виде
+#Sort_count.cpp
+Сортировки с подсчетом кол-ва сравнений и перемещений элементов
