@@ -27,32 +27,32 @@ void fill_worst(int* mas, int n) {
  * Иначе вставляем элемент из 0 позиции
  * На место правого
  */
-void BarrierInsertionSort(int* mas, int n) {
+void BarrierInsertionSort(int* mas, int N) {
     // Создаем копию массива
     // В котором будет на 1 элемент больше
-    int* A = new int[n + 1];
+    int* A = new int[N + 1];
     // Копируем элементы из исходного массива
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < N; ++i) {
         A[i + 1] = mas[i];
     }
     // A1
     int j;
-    for (int i = 1; i <= n; ++i) {  
+    for (int i = 1; i <= N; ++i) {  
         A[0] = A[i];
-        //std::cout << "\nПроход " << i << ":\n"; print(A, n + 1);
+        //std::cout << "\nПроход " << i << ":\n"; print(A, N + 1);
         j = i - 1;
         // A2
         while (A[j] > A[0]) {
             A[j + 1] = A[j];
             --j;
-            //print(A, n + 1);
+            //print(A, N + 1);
         }
         A[j + 1] = A[0];
-        //print(A, n + 1);
+        //print(A, N + 1);
     }
     // Копируем отсортированную часть обратно
     // В исходный массив
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < N; ++i) {
         mas[i] = A[i + 1];
     }
     delete[] A;
@@ -61,23 +61,23 @@ void BarrierInsertionSort(int* mas, int n) {
 int main() {
     setlocale(LC_ALL, "rus");
 
-    int n; std::cout << "n = "; std::cin >> n;
+    int N; std::cout << "N = "; std::cin >> N;
     
-    int* mas = new int[n];
+    int* mas = new int[N];
 
-    fill_worst(mas, n);
+    fill_worst(mas, N);
 
-    std::cout << "Исходный массив:\n\t"; print(mas, n);
+    std::cout << "Исходный массив:\n\t"; print(mas, N);
     
-    BarrierInsertionSort(mas, n);
+    BarrierInsertionSort(mas, N);
 
-    std::cout << "Отсортированный массив:\n\t"; print(mas, n);
+    std::cout << "Отсортированный массив:\n\t"; print(mas, N);
 
     return 0;
 }
 /*
 Test:
-n = 8
+N = 8
 Исходный массив:
         8 7 6 5 4 3 2 1
 Отсортированный массив:
