@@ -105,6 +105,64 @@ void ShellInsertionSort(int* a, int N) {
     std::cout << "Количество перестановок: " << M << std::endl;
 }
 
+void BarrierInsertionSort(int* mas, int N) {
+    int* A = new int[N + 1];
+    for (int i = 0; i < N; ++i) {
+        A[i + 1] = mas[i];
+    }
+    int C = 0, M = 0;
+    M = 2 * N; // копирование массива в 2 стороны
+    int j;
+    for (int i = 1; i <= N; ++i) {  
+        A[0] = A[i]; ++M;
+        j = i - 1;
+        ++C;
+        while (A[j] > A[0]) {
+            A[j + 1] = A[j];
+            --j;
+            ++C;
+        }
+        A[j + 1] = A[0]; ++M;
+    }
+    for (int i = 0; i < N; ++i) {
+        mas[i] = A[i + 1];
+    }
+    delete[] A;
+    std::cout << "Количество сравнений: " << C << std::endl;
+    std::cout << "Количество перестановок: " << M << std::endl;
+}
+
+int bin_search(int* Arr, int n, int k, int& C, int& M) {
+    int l = 0, r = n - 1;
+    int sr;
+    while (l <= r) {
+        sr = (l + r) / 2;
+        ++C;
+        if (k == Arr[sr]) { l = sr; break; }
+        else ++C; if (k > Arr[sr]) { l = sr + 1; }
+        else ++C; if (k < Arr[sr]) { r = sr - 1; }
+    }
+    return l;
+}
+void bin_InsertionSort(int* Arr, int n) {
+    int W, index;
+    int C = 0, M = 0;
+    for (int i = 1; i < n; ++i) {
+        ++C;
+        if (Arr[i - 1] > Arr[i]) {
+            W = Arr[i]; ++M;
+            index = bin_search(Arr, i, W, C, M);
+            for (int j = i; j > index; --j) {
+                Arr[j] = Arr[j - 1];
+                ++M;
+            }
+            Arr[index] = W; ++M;
+        }
+    }
+    std::cout << "Количество сравнений: " << C << std::endl;
+    std::cout << "Количество перестановок: " << M << std::endl;
+}
+
 void Sort(int*& mas, int n) {
     InsertionSort(mas, n);
 }
