@@ -82,6 +82,29 @@ void InsertionSort(int*& mas, int n) {
     std::cout << "Количество перестановок в процессе сортировки: " << M << std::endl;
 }
 
+void ShellInsertionSort(int* a, int N) {
+    int step = N / 2;
+    int j, tmp;
+    int C = 0, M = 0;
+
+    while (step > 0) {
+        for (int i = 0; i < N - step; ++i) {
+            j = i;
+            while ((j >= 0) && (a[j] > a[j + step])) {
+                tmp = a[j];
+                a[j] = a[j + step];
+                a[j + step] = tmp;
+                --j;
+                M += 3;
+                ++C;
+            }
+        }
+        step /= 2;
+    }
+    std::cout << "Количество сравнений: " << C << std::endl;
+    std::cout << "Количество перестановок: " << M << std::endl;
+}
+
 void Sort(int*& mas, int n) {
     InsertionSort(mas, n);
 }
