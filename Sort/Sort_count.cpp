@@ -81,7 +81,9 @@ void InsertionSort(int*& mas, int n) {
     std::cout << "Количество сравнений в процессе сортировки: " << C << '\n';
     std::cout << "Количество перестановок в процессе сортировки: " << M << std::endl;
 }
-
+// На больших N наблюдается значительный выйгрыш
+// В количестве сравнений и перестановок
+// В сравнении с обычным InsertionSort
 void ShellInsertionSort(int* a, int N) {
     int step = N / 2;
     int j, tmp;
@@ -104,7 +106,9 @@ void ShellInsertionSort(int* a, int N) {
     std::cout << "Количество сравнений: " << C << std::endl;
     std::cout << "Количество перестановок: " << M << std::endl;
 }
-
+// На больших N наблюдается выйгрыш
+// В количестве перестановок
+// В сравнении с обычным InsertionSort
 void BarrierInsertionSort(int* mas, int N) {
     int* A = new int[N + 1];
     for (int i = 0; i < N; ++i) {
@@ -144,6 +148,9 @@ int bin_search(int* Arr, int n, int k, int& C, int& M) {
     }
     return l;
 }
+// На больших N наблюдается выйгрыш
+// В количестве сравнений
+// В сравнении с обычным InsertionSort
 void bin_InsertionSort(int* Arr, int n) {
     int W, index;
     int C = 0, M = 0;
