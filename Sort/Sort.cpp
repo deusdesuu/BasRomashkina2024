@@ -136,7 +136,6 @@ void BarrierInsertionSort(int* mas, int n) {
 void ShellInsertionSort(int* a, int N) {
     int step = N / 2;
     int j, tmp;
-    int C = 0, M = 0;
 
     while (step > 0) {
         for (int i = 0; i < N - step; ++i) {
@@ -146,8 +145,6 @@ void ShellInsertionSort(int* a, int N) {
                 a[j] = a[j + step];
                 a[j + step] = tmp;
                 --j;
-                M += 3;
-                ++C;
             }
         }
         step /= 2;
