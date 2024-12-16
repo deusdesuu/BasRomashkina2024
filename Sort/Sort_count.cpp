@@ -142,10 +142,12 @@ int bin_search(int* Arr, int n, int k, int& C, int& M) {
     int sr;
     while (l <= r) {
         sr = (l + r) / 2;
-        ++C;
-        if (k == Arr[sr]) { l = sr; break; }
-        else ++C; if (k > Arr[sr]) { l = sr + 1; }
-        else ++C; if (k < Arr[sr]) { r = sr - 1; }
+        ++C; 
+        if (k >= Arr[sr]) { l = sr + 1; }
+        else {
+            ++C;
+            if (k < Arr[sr]) { r = sr - 1; }
+        }
     }
     return l;
 }
