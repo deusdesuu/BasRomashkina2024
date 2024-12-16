@@ -92,6 +92,7 @@ void ShellInsertionSort(int* a, int N) {
     while (step > 0) {
         for (int i = 0; i < N - step; ++i) {
             j = i;
+            ++C;
             while ((j >= 0) && (a[j] > a[j + step])) {
                 tmp = a[j];
                 a[j] = a[j + step];
