@@ -20,7 +20,7 @@ void ShellInsertionSort3(int* a, int N) {
     int j, tmp;
     int M = 0, C = 0;
 
-    while (3 * h < N) {
+    do {
         for (int i = 0; i < N - h; ++i) {
             j = i;
             ++C;
@@ -34,7 +34,8 @@ void ShellInsertionSort3(int* a, int N) {
             }
         }
         h = 3 * h + 1;
-    }
+    } while (3 * h < N);
+
     std::cout << "Количество сравнений: " << C << std::endl;
     std::cout << "Количество перестановок: " << M << std::endl;
 }
@@ -43,7 +44,7 @@ void ShellInsertionSort2(int* a, int N) {
     int j, tmp;
     int M = 0, C = 0;
 
-    while (2 * h < N) {
+    do {
         for (int i = 0; i < N - h; ++i) {
             j = i;
             ++C;
@@ -57,7 +58,8 @@ void ShellInsertionSort2(int* a, int N) {
             }
         }
         h = 2 * h + 1;
-    }
+    } while (2 * h < N);
+
     std::cout << "Количество сравнений: " << C << std::endl;
     std::cout << "Количество перестановок: " << M << std::endl;
 }
