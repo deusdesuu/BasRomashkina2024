@@ -73,8 +73,7 @@ int bin_search(int* Arr, int n, int k) {
     int sr;
     while (l <= r) {
         sr = (l + r) / 2;
-        if (k == Arr[sr]) { l = sr; break; }
-        if (k > Arr[sr]) { l = sr + 1; }
+        if (k >= Arr[sr]) { l = sr + 1; }
         if (k < Arr[sr]) { r = sr - 1; }
     }
     return l;
