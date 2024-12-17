@@ -172,7 +172,39 @@ void bin_InsertionSort(int* Arr, int n) {
     std::cout << "Количество сравнений: " << C << std::endl;
     std::cout << "Количество перестановок: " << M << std::endl;
 }
+void ShakerSort(int* M, int num) {
+    int left = 0;   // левая граница
+    int right = num - 1;// правая граница
+    int j, t, k = num - 1;//k-фиксирование индекса посл-его обмена
+    int m = 0, c = 0; // m - кол-во перестановок, с - кол-во сравнений
 
+    do {
+        for (j = left; j < right; j++) {
+            ++c;
+            if (M[j] > M[j + 1]) {
+                t = M[j];
+                M[j] = M[j + 1];
+                M[j + 1] = t;
+                k = j;
+                m += 3;
+            }
+        }
+        right = k;
+        for (j = right; j > left; j--) {
+            ++c;
+            if (M[j - 1] > M[j]) {
+                t = M[j];
+                M[j] = M[j - 1];
+                M[j - 1] = t;
+                k = j;
+                m+=3;
+            }
+        }
+        left = k;
+    } while (left < right);
+    std::cout << "Количество сравнений: " << c << std::endl;
+    std::cout << "Количество перестановок: " << m << std::endl;
+}
 void Sort(int*& mas, int n) {
     InsertionSort(mas, n);
 }
