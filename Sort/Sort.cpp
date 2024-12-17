@@ -150,6 +150,7 @@ void ShellInsertionSort(int* a, int N) {
     }
 }
 // Шейкерная сортировка
+// T = O(n^2) M = O(1), устойчивая
 /*
      За 1 проход цикла while:
 
