@@ -195,3 +195,22 @@ void ShakerSort(int* M, int num) {
         left = k;
     } while (left < right);
 }
+/* Сортировка "Гномья"
+ T = O(ツ) М = О(1)
+ Сортировка вставками для тупых
+ Абсолютно бесполезный кусок кода
+ */
+void GnomeSort(int* ar, int n) {
+    int i = 0, tmp;
+
+    while (i < n) {
+        if (i == 0 || ar[i - 1] <= ar[i]) { 
+            ++i;
+        }
+        else {
+            tmp = ar[i];
+            ar[i] = ar[i - 1];
+            ar[--i] = tmp;
+        }
+    }
+}
