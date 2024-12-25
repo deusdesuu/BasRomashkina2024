@@ -29,6 +29,9 @@ void SquareSelectionSort(int* A, int n) {
     int m = 0, c = 0;
 
     int sqrtN = sqrt(n);
+    // tail нам нужен в случаях
+    // Когда массив нельзя ровно поделить
+    // На sqrt N и у нас остается хвост
     bool tail = (n % sqrtN) > 0;
 
     int Bn = n / sqrtN + tail;
