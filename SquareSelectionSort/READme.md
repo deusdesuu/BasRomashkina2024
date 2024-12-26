@@ -7,7 +7,8 @@
 
 3) Сортировка квадратичным выбором:
 
-![image](https://github.com/user-attachments/assets/17e0c700-c009-4b4b-9f1e-ba626bf8ba8f)
+![image](https://github.com/user-attachments/assets/15f99240-b526-4a6c-9950-91c1a92e2f48)
+
 
 Вывод:
 Надо как-то ее оптимизировать...
