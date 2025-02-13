@@ -22,7 +22,6 @@ void add(Node* node, int value) {
 	}
 	Node* new_node = new(Node);
 	(*new_node).value = value;
-	(*new_node).next = nullptr;
 	(*current).next = new_node;
 }
 void print(Node* node) {
