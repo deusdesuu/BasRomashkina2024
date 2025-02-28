@@ -8,7 +8,6 @@
 вывод на экран ВСЕХ элементов очереди сначала без удаления, затем с удалением
 
 */
-#include "stdafx.h"
 #include <iostream>
 #include <locale>
 #include <random>
@@ -16,74 +15,87 @@
 
 struct Node {
 	int value;
-	Node* next;
-	Node* prev;
+	Node* next = nullptr;
 };
-
-void add(Node*&, Node*&, int);
+void print(Node*);
 int pop(Node*&);
-void print(Node*, Node*);
+void push(Node*&, Node*&, int);
+void clear(Node*);
 
-int _tmain(int argc, _TCHAR* argv[])
-{
-	srand(time(0));
+int main() {
 	setlocale(LC_ALL, "rus");
+	srand(time(0));
 
 	Node* head = nullptr;
 	Node* tail = nullptr;
+
+	int n = 10;
 	int value;
-	
-	for (int i = 0; i < 10; ++i) {
+	for (int i = 0; i < n; ++i) {
 		value = rand() % 99 - 50;
-		add(head, tail, value);
-		std::cout << i + 1 << "-й элемент очереди: " << value << std::endl;
+		std::cout << i + 1 << "-й элемент очереди: " << value << "\n";
+		push(head, tail, value);
 	}
-	print(head, tail);
-	for (int i = 0; i < 10; ++i) {
+	std::cout << "\nВывод элементов очереди без удаления:\n\t";
+	print(tail);
+	std::cout << "\nВывод элементов очереди с удалением\n\t";
+	for (int i = 0; i < n; ++i) {
 		std::cout << pop(tail) << ' ';
 	}
 	std::cout << std::endl;
 
-	std::cin >> value;
+	clear(tail);
 	return 0;
 }
-void add(Node*& head, Node*& tail, int value) {
-	Node* new_node = new(Node);
+void print(Node* tail) {
+	Node* current = tail;
+	while (current != nullptr) {
+		std::cout << (*current).value << ' ';
+		current = (*current).next;
+	}
+	std::cout << std::endl;
+}
+void push(Node*& head, Node*& tail, int value) {
+	Node* new_node = new Node;
 	(*new_node).value = value;
-	(*new_node).next = nullptr;
-	(*new_node).prev = nullptr;
-
 	if (head == nullptr) {
 		head = new_node;
 		tail = new_node;
-		(*head).next = tail;
-		(*tail).prev = head;
-	} else {
-		(*new_node).next = head;
-		(*head).prev = new_node;
+	}
+	else {
+		(*head).next = new_node;
 		head = new_node;
 	}
 }
 int pop(Node*& tail) {
-	int value = (*tail).value;
-
-	Node* copy = tail;
-	if ((*tail).prev != nullptr) {
-		tail = (*tail).prev;
-		(*tail).next = nullptr;
-		(*copy).prev = nullptr;
-	}
-	delete copy;
-
-	return value;
+	if (tail == nullptr) { return -1; }
+	int result = (*tail).value;
+	Node* next = (*tail).next;
+	delete tail;
+	tail = next;
+	return result;
 }
-void print(Node* head, Node* tail) {
-	Node* current = head;
-	while (true) {
-		std::cout << (*current).value << ' ';
-		if (current == tail) { break; }
-		current = (*current).next;
-		
+void clear(Node* tail) {
+	while (tail != nullptr) {
+		pop(tail);
 	}
-	std::cout << std::endl;
 }
+/*
+ * Test:
+ * 1-й элемент очереди: -44
+ * 2-й элемент очереди: -12
+ * 3-й элемент очереди: 8
+ * 4-й элемент очереди: -50
+ * 5-й элемент очереди: -5
+ * 6-й элемент очереди: -31
+ * 7-й элемент очереди: 22
+ * 8-й элемент очереди: -5
+ * 9-й элемент очереди: -43
+ * 10-й элемент очереди: 22
+ * 
+ * Вывод элементов очереди без удаления:
+ *         -44 -12 8 -50 -5 -31 22 -5 -43 22
+ * 
+ * Вывод элементов очереди с удалением
+ *         -44 -12 8 -50 -5 -31 22 -5 -43 22
+ */
