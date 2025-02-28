@@ -18,10 +18,12 @@ struct Node {
 	Node* next = nullptr;
 };
 struct Queue {
+	~Queue() { clear(); }
 	void push(int);
 	int pop();
 	void print();
-
+	void clear() { while (tail != nullptr) { pop(); } }
+private:
 	Node* head = nullptr;
 	Node* tail = nullptr;
 };
@@ -47,6 +49,8 @@ int main() {
 		std::cout << queue.pop() << ' ';
 	}
 	std::cout << std::endl;
+	queue.clear();
+
 	return 0;
 }
 void Queue::push(int value) {
@@ -66,6 +70,7 @@ int Queue::pop() {
 	if (head == nullptr) { return -1; }
 	int result = (*tail).value;
 	Node* next = (*tail).next;
+	(*tail).next = nullptr;
 	delete tail;
 	tail = next;
 	return result;
