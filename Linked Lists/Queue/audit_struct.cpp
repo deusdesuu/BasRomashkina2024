@@ -18,14 +18,15 @@ struct Node {
 	Node* next = nullptr;
 };
 struct Queue {
+	Queue() : head(nullptr), tail(nullptr) {};
 	~Queue() { clear(); }
 	void push(int);
 	int pop();
 	void print();
 	void clear() { while (tail != nullptr) { pop(); } }
 private:
-	Node* head = nullptr;
-	Node* tail = nullptr;
+	Node* head;
+	Node* tail;
 };
 int main() {
 	setlocale(LC_ALL, "rus");
@@ -35,7 +36,7 @@ int main() {
 
 	int n = 10;
 	int value;
-	
+
 	for (int i = 0; i < n; ++i) {
 		value = rand() % 99 - 50;
 		std::cout << i + 1 << "-й элемент очереди: " << value << "\n";
@@ -96,10 +97,10 @@ void Queue::print() {
  8-й элемент очереди: 35
  9-й элемент очереди: 40
  10-й элемент очереди: 3
- 
+
  Вывод элементов без удаления:
- 		 31 -42 -7 16 -19 -32 -43 35 40 3
- 
+		 31 -42 -7 16 -19 -32 -43 35 40 3
+
  Вывод элементов с удалением:
- 		 31 -42 -7 16 -19 -32 -43 35 40 3
+		 31 -42 -7 16 -19 -32 -43 35 40 3
  */
