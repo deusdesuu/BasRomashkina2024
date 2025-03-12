@@ -2,7 +2,7 @@
 #include <iostream>
 #include <locale>
 #include <random>
-#include <stack>
+#include <queue>
 /*
  * Очередь в стандарте реализована, как
  * Обертка для дека, путем ограничения
@@ -11,74 +11,75 @@
  */
 /*
  * Описание функций:
- * - <T> top() - возврат указателя на вершину стека (Node* head)
+ * - <T> back() - возврат указателя на последний элемент (Node* tail)
  * - bool empty() - пустота очереди (head == tail == nullptr)
+ * - <T> front() - возврат указателя на первый элемент (Node* head)
  * - void pop() - удаление первого элемента
- * - void push(const& <T>) - добавление нового элемента на вершину стека
- * - int size() - возвращает количество элементов в стеке
+ * - void push(const& <T>) - добавление нового элемента в конец
+ * int size() - возвращает количество элементов в очереди
  * - операторы ==, !=, >, <, <=, >= сравнивают 2 стека лексикографически
  */
 /*
  Пример для оператора >:
 
- template <class T>
-bool operator>(std::stack<T> stack1, std::stack<T> stack2) {
-	while (!stack1.empty() && stack2.empty()) {
-		if (stack1.top() <= stack2.top()) {
-			return false;
-		}
-		stack1.pop();
-		stack2.pop();
-	}
-	if (!stack1.empty()) { return true; }
-	else { return false; }
+template <class T>
+bool operator>(std::queue<T> queue1, std::queue<T> queue2) {
+ while (!queue1.empty() && queue2.empty()) {
+	 if (queue1.front() <= queue2.front()) {
+		 return false;
+	 }
+	 queue1.pop();
+	 queue2.pop();
+ }
+ if (!queue1.empty()) { return true; }
+ else { return false; }
 }
- */
-void print(std::stack<int> stack) {
-	while (!stack.empty()) {
-		std::cout << stack.top() << ' ';
-		stack.pop();
+*/
+void print(std::queue<int> queue) {
+	while (!queue.empty()) {
+		std::cout << queue.front() << ' ';
+		queue.pop();
 	}
 	std::cout << std::endl;
 }
 int main() {
 	setlocale(LC_ALL, "rus");
-	srand(time(0));
 
-	std::stack<int> stack; // Инициализация стека
+	std::queue<int> queue; // Инициализация очереди
 	int n = 10;
-	std::cout << "Проверяем, что стек пуст(empty): " << stack.empty() << std::endl;
-	// Заполнение стека
+	std::cout << "Проверяем, что очередь пуста (empty): " << queue.empty() << std::endl;
+	// Заполнение очереди
 	for (int i = 0; i < n; ++i) {
-		stack.push(rand() % 99 - 50);
+		queue.push(rand() % 99 - 50);
 	}
-	std::cout << "Стек после заполнения (push):\n\t"; print(stack);
-	std::cout << "Проверяем, что стек не пуст (empty): " << stack.empty() << std::endl;
+	std::cout << "Очередь после заполнения (push):\n\t"; print(queue);
+	std::cout << "Проверяем, что очередь не пуста (empty): " << queue.empty() << std::endl;
 
-	std::cout << "\ntop()\tsize()\tprint()\n";
+	std::cout << "\nfront()\tsize()\tprint()\n";
 	for (int i = 0; i < n; ++i) {
-		std::cout << stack.top() << '\t' << stack.size() << '\t'; print(stack);
-		stack.pop();
+		std::cout << queue.front() << '\t' << queue.size() << '\t'; print(queue);
+		queue.pop();
 	}
+
 	return 0;
 }
 /*
 Test:
 
-Проверяем, что стек пуст(empty): 1
-Стек после заполнения (push):
-		30 -43 31 -25 -26 26 -37 29 -38 7
-Проверяем, что стек не пуст (empty): 0
+Проверяем, что очередь пуста (empty): 1
+Очередь после заполнения (push):
+		-9 3 47 17 12 32 43 4 -16 -39
+Проверяем, что очередь не пуста (empty): 0
 
-top()   size()  print()
-30      10      30 -43 31 -25 -26 26 -37 29 -38 7
--43     9       -43 31 -25 -26 26 -37 29 -38 7
-31      8       31 -25 -26 26 -37 29 -38 7
--25     7       -25 -26 26 -37 29 -38 7
--26     6       -26 26 -37 29 -38 7
-26      5       26 -37 29 -38 7
--37     4       -37 29 -38 7
-29      3       29 -38 7
--38     2       -38 7
-7       1       7
+front() size()  print()
+-9      10      -9 3 47 17 12 32 43 4 -16 -39
+3       9       3 47 17 12 32 43 4 -16 -39
+47      8       47 17 12 32 43 4 -16 -39
+17      7       17 12 32 43 4 -16 -39
+12      6       12 32 43 4 -16 -39
+32      5       32 43 4 -16 -39
+43      4       43 4 -16 -39
+4       3       4 -16 -39
+-16     2       -16 -39
+-39     1       -39
 */
