@@ -10,6 +10,7 @@ struct Node {
 	Node* left = nullptr;
 	Node* right = nullptr;
 };
+//поиск с включением (нерекурсивный)
 void add(Node*& root, int value) {
 	Node* new_node = new Node;
 	(*new_node).value = value;
@@ -32,6 +33,7 @@ void add(Node*& root, int value) {
 		}
 	}
 }
+// вывод в порядке возрастания (нерекурсивный)
 void print_symmetry(Node* root) {
 	if (root != nullptr) {
 		print_symmetry((*root).left);
@@ -39,6 +41,7 @@ void print_symmetry(Node* root) {
 		print_symmetry((*root).right);
 	}
 }
+// освобождение память (рекурсивное)
 void clear(Node*& root) {
 	if (root != nullptr) {
 		clear((*root).left);
@@ -49,6 +52,7 @@ void clear(Node*& root) {
 		root = nullptr;
 	}
 }
+// максимум (нерекурсивный)
 // Идем по дереву вправо
 // Пока не встретим nullptr
 Node* max(Node*& root) {
@@ -62,6 +66,7 @@ Node* max(Node*& root) {
 	result = current;
 	return result;
 }
+// минимум (нерекурсивный)
 // Идем по дереву влево
 // Пока не встретим nullptr
 Node* min(Node*& root) {
@@ -75,17 +80,7 @@ Node* min(Node*& root) {
 	result = current;
 	return result;
 }
-Node* search(Node*& root, int value) {
-	Node* current = root;
-	int cur_val = (*current).value;
-	while (true) {
-		if (cur_val == value) { break; }
-		if (cur_val > value) { current = (*current).left; }
-		else { current = (*current).right; }
-		cur_val = (*current).value;
-	}
-	return current;
-}
+// удаление листовой вершины
 void del_leaf(Node* parent, Node*& child, bool dir) {
 	if (parent != nullptr) {
 		if (dir) { (*parent).right = nullptr; }
@@ -94,6 +89,7 @@ void del_leaf(Node* parent, Node*& child, bool dir) {
 	delete child;
 	child = nullptr;
 }
+// удаление вершины с одним правым потомком
 void del_right_child(Node* parent, Node*& child, bool dir) {
 	if (parent != nullptr) {
 		if (dir) { (*parent).right = (*child).right; }
@@ -103,6 +99,7 @@ void del_right_child(Node* parent, Node*& child, bool dir) {
 	delete child;
 	child = nullptr;
 }
+// удаление вершины с одним левым потомком
 void del_left_child(Node* parent, Node*& child, bool dir) {
 	if (parent != nullptr) {
 		if (dir) { (*parent).right = (*child).left; }
@@ -112,6 +109,7 @@ void del_left_child(Node* parent, Node*& child, bool dir) {
 	delete child;
 	child = nullptr;
 }
+// удаление вершины с двумя потомками
 void del_two_childs(Node* parent, Node*& child, bool dir) {
 	// ищем минимум
 	Node* rmin = child;
@@ -138,15 +136,17 @@ void del_two_childs(Node* parent, Node*& child, bool dir) {
 void del(Node* root, int value) {
 	Node* prv = nullptr;
 	Node* current = root;
-
+    
+    // удаляемая вершина слева/справа от своей родительской
 	bool dir = 0; // 0 - left, 1 - right;
-
+	
+    // определение поддерева из которого удаляем вершину
 	int tree_side; // 0 - empty, 1 - left side, 2 - right side, 3 - root
 	if (!current) { tree_side = 0; }
 	else if ((*current).value == value) { tree_side = 3; }
 	else if ((*current).value > value) { tree_side = 1; }
 	else if ((*current).value < value) { tree_side = 2; }
-
+    // поиск удаляемой вершины
 	while (true) {
 		if (!current) {
 			std::cout << "Такого узла нет." << std::endl;
@@ -165,27 +165,33 @@ void del(Node* root, int value) {
 			}
 		}
 	}
-	if (current) {
+	
+	if (current) { // если нашли нужную вершину
 		bool f1, f2;
-		f1 = (*current).left == nullptr;
-		f2 = (*current).right == nullptr;
-
+		
+		// для удаляемой вершины
+		f1 = (*current).left == nullptr; // сущ левый потомок
+		f2 = (*current).right == nullptr;// сущ правый потомок
+        // пишем в консоль поддерево из которого удаляем
 		if (tree_side == 1) { std::cout << "Удаление вершины левого поддерева.\n"; }
 		else if (tree_side == 2) { std::cout << "Удаление вершины правого поддерева.\n"; }
 		else if (tree_side == 3) { std::cout << "Удаление корня" << std::endl; }
-
+        // если удаляемая лист
 		if (f1 && f2) {
 			std::cout << "Листовая вершина." << std::endl;
 			del_leaf(prv, current, dir);
 		}
+		// если есть правый потомок
 		if (f1 && !f2) {
 			std::cout << "С одной правой вершиной." << std::endl;
 			del_right_child(prv, current, dir);
 		}
+		// если есть левый потомок
 		if (!f1 && f2) {
 			std::cout << "С одной левой вершиной." << std::endl;
 			del_left_child(prv, current, dir);
 		}
+		// если 2 потомка
 		if (!f1 && !f2) {
 			std::cout << "С двумя вершинами\n";
 			std::cout << "Удален элемент = " << (*current).value << std::endl;
@@ -199,7 +205,7 @@ int main() {
 
 	Node* root = nullptr;
 
-	std::ifstream f("F1.txt");
+	std::ifstream f("text.txt");
 
 	int n;
 	f >> n;
