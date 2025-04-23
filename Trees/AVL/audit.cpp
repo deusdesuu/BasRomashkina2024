@@ -25,8 +25,9 @@ void LL(AVL*&); // перевес лево-лево
 void RR(AVL*&); // перевес право-право
 void LR(AVL*&); // перевес лево-право
 void RL(AVL*&); // перевес право-лево
-int balance(AVL*& node) { return (*node).h_right - (*node).h_left; }
-
+// Разница высот поддеревьев для вершины
+int height_dif(AVL*& node) { return (*node).h_right - (*node).h_left; }
+void fix_balance(AVL*&); // Проверка баланса вершины
 
 struct stack {
 	AVL* value;
@@ -88,21 +89,12 @@ void add(AVL*& root, int value) {
 		AVL* last;
 		AVL* current;
 		int height; // высота дерева
-		int bal; // разница высот правого и левого поддерева
 		while (head != nullptr) {
 			// считаем высоты для текущей вершины
 			last = (*head).value;
 			pop(head);
 			// проверяем баланс вершины, поворачиваем при необходимости
-			bal = balance(last);
-			if (bal > 1) {
-				if (balance((*last).right) == 1) { RR(last); }
-				else { RL(last); }
-			}
-			if (bal < -1) {
-				if (balance((*last).left) == -1) { LL(last); }
-				else { LR(last); }
-			}
+			fix_balance(last);
 			// обновляем высоту для родительской вершины
 			height = max((*last).h_left, (*last).h_right) + 1;
 			if (head == nullptr) { break; }
@@ -111,6 +103,17 @@ void add(AVL*& root, int value) {
 			if (last == (*current).right) { (*current).h_right = height; }
 			else { (*current).h_left = height; }
 		}
+	}
+}
+void fix_balance(AVL*& node) {
+	int balance = height_dif(node);
+	if (balance == 2) {
+		if (height_dif((*node).right) == 1) { RR(node); }
+		else { RL(node); }
+	}
+	if (balance == -2) {
+		if (height_dif((*node).left) == -1) { LL(node); }
+		else { LR(node); }
 	}
 }
 /*
