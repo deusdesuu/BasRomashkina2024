@@ -344,7 +344,6 @@ void del(AVL*& root, int value) {
 			// переносим значение правого минимума в удаляемую вершину
 			(*to_delete).value = (*current).value;
 			// удаляем подменную вершину
-			std::cout << ((*(*head).value).left == nullptr) << std::endl;
 			delete current;
 			current = nullptr;
 			
