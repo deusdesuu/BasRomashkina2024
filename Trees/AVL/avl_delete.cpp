@@ -28,7 +28,8 @@ void RL(AVL*&); // перевес право-лево
 // Разница высот поддеревьев для вершины
 int height_dif(AVL*& node) { return (*node).h_right - (*node).h_left; }
 void fix_balance(AVL*&); // Проверка баланса вершины
-void del(AVL*&, int); // Удаление вершины (аналогично обычному дереву)
+void del(AVL*&, int);
+
 
 struct stack {
 	AVL* value;
@@ -38,12 +39,13 @@ void print(stack*); // вывод стека
 void add(stack*&, AVL*); // добавление элемента в стек
 void pop(stack*&); // удаление элемента из стека
 void clear(stack*&); // очистка стека
+void fix_height_del(stack*&, int, AVL*);
 
-// формирование дерева: T=O(log2(n)) M=(log2(n))
+
 void add(AVL*& root, int value) {
 	AVL* new_node = new AVL;
 	(*new_node).value = value;
-	// стек для запоминания пути до вершины для упрощенной балансировки
+
 	stack* head = nullptr;
 	// флаг для проверки случаев, когда мы добавляем вершину, которая уже есть в дереве
 	// (чтобы не было утечек памяти)
@@ -94,25 +96,36 @@ void add(AVL*& root, int value) {
 			// считаем высоты для текущей вершины
 			last = (*head).value;
 			pop(head);
+			int balance = height_dif(last);
+			if (abs(balance) == 2) {
+                std::cout << "При добавлении вершины " << value << " обнаружен дисбаланс!\n";
+                print_forward(root);
+            }
 			// проверяем баланс вершины, поворачиваем при необходимости
 			fix_balance(last);
+			if (abs(balance) == 2) {
+                std::cout << "Дерево после балансировки:\n";
+                print_forward(root); std::cout << '\n' << std::endl;
+            }
 			// обновляем высоту для родительской вершины
-			if (head == nullptr) { break; }
 			height = max((*last).h_left, (*last).h_right) + 1;
-			if (last == (*(*head).value).right) { (*(*head).value).h_right = height; }
-			else { (*(*head).value).h_left = height; }
+			if (head == nullptr) { break; }
+			current = (*head).value;
+			// обновляем значение высоты
+			if (last == (*current).right) { (*current).h_right = height; }
+			else { (*current).h_left = height; }
 		}
 	}
 }
 void fix_balance(AVL*& node) {
 	int balance = height_dif(node);
 	if (balance == 2) {
-		if (height_dif((*node).right) == 1) { RR(node); }
-		else { RL(node); }
+		if (height_dif((*node).right) == 1) { RR(node); std::cout << "\nВыполняем LL поворот" << std::endl;}
+		else { RL(node); std::cout << "\nВыполняем RL поворот" << std::endl;}
 	}
 	if (balance == -2) {
-		if (height_dif((*node).left) == -1) { LL(node); }
-		else { LR(node); }
+		if (height_dif((*node).left) == -1) { LL(node); std::cout << "\nВыполняем RR поворот" << std::endl;}
+		else { LR(node); std::cout << "\nВыполняем LR поворот" << std::endl;}
 	}
 }
 /*
@@ -167,13 +180,13 @@ void LL(AVL*& node) {
 
 	(*y).right = x;
 	(*y).h_right = max((*x).h_left, (*x).h_right) + 1;
-	
+
 	(*node).value = (*y).value;
 	(*node).h_left = (*y).h_left;
 	(*node).h_right = (*y).h_right;
 	(*node).left = (*y).left;
 	(*node).right = (*y).right;
-	
+
 	delete y;
 }
 // Перевес лево-право
@@ -205,12 +218,9 @@ int main() {
 	}
 
 	std::cout << "Вывод АВЛ дерева прямым обходом:\n\t"; print_forward(root); std::cout << std::endl;
-	std::cout << "Значение, которое хотите удалить: "; std::cin >> value;
-
-	del(root, value);
-
-	std::cout << "Вывод АВЛ дерева после удаления:\n\t"; print_forward(root); std::cout << std::endl;
-
+    std::cout << "Вершина, которую хотим удалить: "; std::cin >> value;
+    del(root, value);
+    std::cout << "Вывод АВЛ дерева прямым обходом после удаления:\n\t"; print_forward(root); std::cout << std::endl;
 	clear(root);
 	f.close();
 
@@ -308,6 +318,9 @@ void del(AVL*& root, int value) {
 			(*((*head).value)).left = left;
 			delete current;
 			current = nullptr;
+			--(*(*head).value).h_left;
+			// поднимаемся по дереву (по стеку) и балансируем дерево
+			fix_height_del(head, value, root);
 		}
 		// Только правый потомок
 		else if ((*current).left == 0) {
@@ -316,6 +329,9 @@ void del(AVL*& root, int value) {
 			(*((*head).value)).right = right;
 			delete current;
 			current = nullptr;
+			--(*(*head).value).h_right;
+			// поднимаемся по дереву (по стеку) и балансируем дерево
+			fix_height_del(head, value, root);
 		}
 		// 2 потомка
 		else {
@@ -346,22 +362,36 @@ void del(AVL*& root, int value) {
 			// удаляем подменную вершину
 			delete current;
 			current = nullptr;
-			
+
 			// поднимаемся по дереву (по стеку) и балансируем дерево
-			int height;
-			while (head != nullptr) {
-				// проверяем баланс
-				current = (*head).value;
-				fix_balance(current);
-				pop(head);
-				// обновляем высоту для родительской вершины
-				if (head == 0) { break; }
-				height = max((*current).h_left, (*current).h_right) + 1;
-				if (current == (*(*head).value).right) { (*(*head).value).h_right = height; }
-				else { (*(*head).value).h_left = height; }
-			}
+			fix_height_del(head, value, root);
 		}
 	}
+	clear(head);
+}
+void fix_height_del(stack*& head, int value, AVL* root) {
+    int height;
+    AVL* current;
+    while (head != nullptr) {
+        // проверяем баланс
+        current = (*head).value;
+        int balance = height_dif(current);
+        if (abs(balance) == 2) {
+            std::cout << "При удалении вершины " << value << " обнаружен дисбаланс!\n";
+            print_forward(root);
+        }
+        fix_balance(current);
+        if (abs(balance) == 2) {
+            std::cout << "Дерево после балансировки:\n";
+            print_forward(root); std::cout << '\n' << std::endl;
+        }
+        pop(head);
+        // обновляем высоту для родительской вершины
+        if (head == 0) { break; }
+        height = max((*current).h_left, (*current).h_right) + 1;
+        if (current == (*(*head).value).right) { (*(*head).value).h_right = height; }
+        else { (*(*head).value).h_left = height; }
+    }
 }
 /*
 Test 1(LL):
