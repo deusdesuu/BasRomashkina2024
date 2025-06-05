@@ -32,7 +32,7 @@ void clear(BTree*);
 // страница
 struct Page {
 	short count = 0; // кол-во вершин на странице
-	Node_list* nodes = nullptr; // массив под вершины
+	Node_list* nodes = nullptr; // список под вершины
 	Page* p0 = nullptr;
 	Page* parent = nullptr;
 };
