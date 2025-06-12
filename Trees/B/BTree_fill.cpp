@@ -9,9 +9,9 @@
 	then it has k + 1 descendants
 */
 #include <iostream>
+#include <fstream>
 #include <locale>
 #include <random>
-#define ull unsigned long long
 
 
 struct Page;
@@ -209,7 +209,7 @@ void BTree_split(BTree* tree, Page* current) {
 	(*center).next = nullptr;
 	/*
 		центр поднять на уровень выше
-		правый справа от центрального 
+		правый справа от центрального
 		левый остается на месте, current не трогаем
 	*/
 	// делим корень
@@ -276,57 +276,20 @@ void BTree_split(BTree* tree, Page* current) {
 		}
 	}
 }
-int find_height(ull nodes) {
-	/*
-		height = 1 -> nodes <= 8
-		height = 2 -> nodes <= 124
-		height = 3 -> nodes <= 2400
-		height = 4 -> nodes <= 58400
-		height = 5 -> nodes <= 1.7 mil (1 771 560)
-		height = 6 -> nodes <= 62 mil (62 748 516)
-		height = 7 -> nodes <= 2.5 bil (2 562 890 624)
-		height = 8 -> nodes <= 118 bil (118 587 876 496)
-		height = 9 -> nodes <= 6.1 tril (6 131 066 257 800)
-		height = 10 -> nodes <= 350 tril (350 277 500 542 220)
-		height = 11 -> nodes <= 21.9 quadril (21 914 624 432 020 320)
-		height = 12 -> nodes <= 1.49 quintil (1 490 116 119 384 765 624)
-		height = 13 -> nodes <= 17.1 quintil (17 185 268 762 964 601 128)
-		height = 14+ -> unsigned long long limit
-	*/
-	ull height = 0;
-	ull result = 0;
-	ull last = 0;
-
-	while (nodes > result) {
-		++height;
-		result = 2 * height;
-		last = result * (2 * height + 1);
-		for (int i = 0; i < height; ++i) {
-			result += last;
-			last *= (2 * height + 1);
-		}
-	}
-	return height;
-}
 int main() {
 	setlocale(LC_ALL, "rus");
 	srand(time(0));
 
-	ull n;
-	std::cout << "Введите количество вершин в дереве: ";
-	std::cin >> n;
-
+	std::ifstream input("input.txt");
 	BTree* tree = new BTree;
 	// Устанавливаем значение высоты для дерева
 	// В соответствии с тем сколько вершин должно в него поместиться
-	(*tree).height = find_height(n);
+	int n;
+	input >> (*tree).height;
 	(*tree).node_limit = (*tree).height * 2;
 	// Заполнение дерева
-	std::cout << "Введите вершины дерева через пробел:\n\t";
-	int value;
-	for (int i = 0; i < n; ++i) {
-		std::cin >> value;
-		BTree_add(tree, value);
+	while (input >> n) {
+		BTree_add(tree, n);
 	}
 	// Вывод дерева
 	print(tree);
